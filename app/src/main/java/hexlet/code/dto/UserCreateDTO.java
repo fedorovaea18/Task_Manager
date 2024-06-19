@@ -10,10 +10,8 @@ import lombok.Setter;
 @Getter
 public class UserCreateDTO {
 
-    @NotBlank
     private String firstName;
 
-    @NotBlank
     private String lastName;
 
     @Email

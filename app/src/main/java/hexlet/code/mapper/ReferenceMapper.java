@@ -11,7 +11,7 @@ import jakarta.persistence.EntityManager;
 @Mapper(
         componentModel = MappingConstants.ComponentModel.SPRING
 )
-public abstract class ReferenceMapper {
+public class ReferenceMapper {
     @Autowired
     private EntityManager entityManager;
 

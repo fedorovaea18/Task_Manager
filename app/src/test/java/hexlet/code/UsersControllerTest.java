@@ -42,9 +42,6 @@ public class UsersControllerTest {
     private MockMvc mockMvc;
 
     @Autowired
-    private Faker faker;
-
-    @Autowired
     private UserRepository userRepository;
 
     @Autowired
@@ -59,11 +56,6 @@ public class UsersControllerTest {
 
     @BeforeEach
     public void setUp() {
-        mockMvc = MockMvcBuilders.webAppContextSetup(wac)
-                .defaultResponseCharacterEncoding(StandardCharsets.UTF_8)
-                .apply(springSecurity())
-                .build();
-
         token = jwt().jwt(builder -> builder.subject("hexlet@example.com"));
 
         testUser = Instancio.of(modelGenerator.getUserModel())
