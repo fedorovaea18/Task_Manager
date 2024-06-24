@@ -26,7 +26,6 @@ public class CustomUserDetailsService implements UserDetailsManager {
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
-
     @Override
     public void createUser(UserDetails userData) {
         var user = new User();

@@ -19,13 +19,14 @@ public class UserService {
     private UserRepository userRepository;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    private UserMapper userMapper;
 
     @Autowired
-    private UserMapper userMapper;
+    private PasswordEncoder passwordEncoder;
 
     public UserDTO create(UserCreateDTO userCreateDTO) {
         var user = userMapper.map(userCreateDTO);
+        user.setPasswordDigest(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
         return userMapper.map(user);
     }

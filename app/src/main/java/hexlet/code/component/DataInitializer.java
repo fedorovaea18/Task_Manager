@@ -33,7 +33,6 @@ public class DataInitializer implements ApplicationRunner {
         userService.createUser(userData);
 
         var defaultTaskStatuses = taskStatusUtils.getDefaultTaskStatuses();
-
         for (var status : defaultTaskStatuses) {
             taskStatusRepository.save(status);
         }

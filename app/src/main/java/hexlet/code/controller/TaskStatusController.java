@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/tasks")
+@RequestMapping("/api/task_statuses")
 public class TaskStatusController {
     @Autowired
     private TaskStatusService taskStatusService;
