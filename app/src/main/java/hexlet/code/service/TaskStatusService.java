@@ -35,13 +35,13 @@ public class TaskStatusService {
 
     public TaskStatusDTO findById(Long id) {
         var taskStatus = taskStatusRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("User With Id: " + id + " Not Found"));
+                .orElseThrow(() -> new ResourceNotFoundException("TaskStatus with id: " + id + " not found"));
         return taskStatusMapper.map(taskStatus);
     }
 
     public TaskStatusDTO update(TaskStatusUpdateDTO taskStatusUpdateDTO, Long id) {
         var taskStatus = taskStatusRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Not Found"));
+                .orElseThrow(() -> new ResourceNotFoundException("TaskStatus with id: " + id + " not found"));
         taskStatusMapper.update(taskStatusUpdateDTO, taskStatus);
 
         taskStatusRepository.save(taskStatus);

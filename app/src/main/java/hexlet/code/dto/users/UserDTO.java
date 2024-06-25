@@ -17,6 +17,5 @@ public class UserDTO {
 
     private String email;
 
-
     private LocalDate createdAt;
 }
