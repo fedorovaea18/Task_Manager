@@ -67,6 +67,7 @@ public class TaskStatusesControllerTest {
 
     @Test
     void testCreate() throws Exception {
+
         var data = Instancio.of(modelGenerator.getTaskStatusModel())
                 .create();
 
@@ -99,6 +100,7 @@ public class TaskStatusesControllerTest {
                 .andExpect(status().isOk());
 
         var taskStatus = taskStatusRepository.findById(testTaskStatus.getId()).get();
+
         assertThat(taskStatus.getSlug()).isEqualTo("newSlug");
         assertThat(taskStatusRepository.findBySlug(taskStatus.getSlug())).get().isEqualTo(taskStatus);
     }

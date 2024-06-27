@@ -3,10 +3,13 @@ package hexlet.code.model;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,17 +18,15 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
 
-import static jakarta.persistence.GenerationType.IDENTITY;
-
 @Entity
+@Table(name = "tasks")
 @Getter
 @Setter
-@Table(name = "tasks")
 @EntityListeners(AuditingEntityListener.class)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Task implements BaseEntity {
     @Id
-    @GeneratedValue(strategy = IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
     private Long id;
 
@@ -37,9 +38,11 @@ public class Task implements BaseEntity {
     private String description;
 
     @ManyToOne
+    @NotNull
     private TaskStatus taskStatus;
 
     @ManyToOne
+    @JoinColumn(name = "assignee_id")
     private User assignee;
 
     @CreatedDate
