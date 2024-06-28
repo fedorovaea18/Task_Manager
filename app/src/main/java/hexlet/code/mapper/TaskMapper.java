@@ -5,7 +5,11 @@ import hexlet.code.dto.tasks.TaskDTO;
 import hexlet.code.dto.tasks.TaskUpdateDTO;
 import hexlet.code.model.Label;
 import hexlet.code.model.Task;
+import hexlet.code.model.TaskStatus;
 import hexlet.code.model.User;
+import hexlet.code.repository.LabelRepository;
+import hexlet.code.repository.TaskRepository;
+import hexlet.code.repository.TaskStatusRepository;
 import hexlet.code.repository.UserRepository;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -28,19 +32,22 @@ import java.util.stream.Collectors;
 public abstract class TaskMapper {
 
     @Autowired
-    private UserRepository userRepository;
+    private TaskStatusRepository taskStatusRepository;
+
+    @Autowired
+    private LabelRepository labelRepository;
 
     @Mapping(target = "name", source = "title")
     @Mapping(target = "description", source = "content")
     @Mapping(target = "assignee", source = "assigneeId")
-    @Mapping(target = "taskStatus", source = "status")
+    @Mapping(target = "taskStatus", source = "status", qualifiedByName = "slugToTaskStatus")
     @Mapping(target = "labels", source = "taskLabelId")
     public abstract Task map(TaskCreateDTO taskCreateDTO);
 
     @Mapping(source = "title", target = "name")
     @Mapping(source = "content", target = "description")
     @Mapping(source = "assigneeId", target = "assignee")
-    @Mapping(source = "status", target = "taskStatus")
+    @Mapping(source = "status", target = "taskStatus", qualifiedByName = "slugToTaskStatus")
     @Mapping(target = "labels", source = "taskLabelId")
     public abstract void update(TaskUpdateDTO taskUpdateDTO, @MappingTarget Task task);
 
@@ -51,13 +58,25 @@ public abstract class TaskMapper {
     @Mapping(target = "taskLabelId", source = "labels", qualifiedByName = "labelsToIds")
     public abstract TaskDTO map(Task task);
 
-    @Named("labelsToIds")
-    List<Long> labelsToIds(List<Label> labels) {
-        if (labels == null) {
-            return null;
-        }
-        return labels.stream()
-                .map(Label::getId)
-                .collect(Collectors.toList());
+ @Named("labelsToIds")
+   List<Long> labelsToIds(List<Label> labels) {
+       if (labels == null) {
+          return null;
+       }
+       return labels.stream()
+               .map(Label::getId)
+               .collect(Collectors.toList());
+   }
+
+    @Named("slugToTaskStatus")
+    public TaskStatus slugToTaskStatus(String slug) {
+        return taskStatusRepository.findBySlug(slug).orElseThrow();
     }
+
+    public List<Label> toEntities(List<Long> labelIds) {
+        return labelRepository.findByIdIn(labelIds);
+    }
+
+
+
 }

@@ -46,6 +46,7 @@ public class TaskStatus implements BaseEntity {
     private LocalDate createdAt;
 
     @OneToMany(mappedBy = "taskStatus")
+    @NotNull
     private List<Task> tasks = new ArrayList<>();
 }
 

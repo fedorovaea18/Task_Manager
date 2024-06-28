@@ -1,6 +1,7 @@
 package hexlet.code.dto.taskstatuses;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.persistence.Column;
 import lombok.Getter;
 import lombok.Setter;
 
