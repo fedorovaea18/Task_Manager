@@ -40,7 +40,7 @@ public abstract class UserMapper {
         }
     }
 
-    @Mapping(source = "password", target = "passwordDigest")
+    @Mapping(target = "passwordDigest", source = "password")
     public abstract User map(UserCreateDTO userCreateDTO);
 
     public abstract UserDTO map(User user);

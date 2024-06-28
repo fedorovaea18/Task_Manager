@@ -1,5 +1,6 @@
 package hexlet.code.util;
 
+import hexlet.code.model.Label;
 import hexlet.code.model.Task;
 import hexlet.code.model.TaskStatus;
 import hexlet.code.model.User;
@@ -12,12 +13,15 @@ import org.instancio.Select;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+
 @Getter
 @Component
 public class ModelGenerator {
     private Model<User> userModel;
     private Model<TaskStatus> taskStatusModel;
     private Model<Task> taskModel;
+    private Model<Label> labelModel;
     @Autowired
     private Faker faker;
 
@@ -47,5 +51,12 @@ public class ModelGenerator {
                 .ignore(Select.field(Task::getAssignee))
                 .ignore(Select.field(Task::getCreatedAt))
                 .toModel();
+
+        labelModel = Instancio.of(Label.class)
+                .ignore(Select.field(Label::getId))
+                .ignore(Select.field(Label::getCreatedAt))
+                .supply(Select.field(Label::getName), () -> faker.lorem().word())
+                .supply(Select.field(Label::getTasks), () -> new ArrayList<Task>())
+                .toModel();
     }
-}
+}    
