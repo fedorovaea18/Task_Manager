@@ -5,6 +5,7 @@ plugins {
     id("org.springframework.boot") version "3.2.2"
     id("io.spring.dependency-management") version "1.1.3"
     id("io.freefair.lombok") version "8.6"
+    id ("io.sentry.jvm.gradle") version "4.8.0"
 }
 
 application {
@@ -60,5 +61,16 @@ tasks.test {
 tasks.jacocoTestReport {
     reports {
         xml.required = true
+    }
+
+    sentry {
+        includeSourceContext = true
+        org = "hexlet-lw"
+        projectName = "java-project99"
+        authToken = System.getenv("SENTRY_AUTH_TOKEN")
+    }
+
+    tasks.sentryBundleSourcesJava {
+        enabled = System.getenv("SENTRY_AUTH_TOKEN") != null
     }
 }

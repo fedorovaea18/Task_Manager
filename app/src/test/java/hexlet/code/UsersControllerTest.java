@@ -55,7 +55,7 @@ public class UsersControllerTest {
         token = jwt().jwt(builder -> builder.subject("hexlet@example.com"));
         testUser = Instancio.of(modelGenerator.getUserModel())
                 .create();
-        userRepository.save(testUser);
+        //userRepository.save(testUser);
     }
 
     @Test

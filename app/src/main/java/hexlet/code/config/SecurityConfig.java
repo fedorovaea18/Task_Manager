@@ -55,7 +55,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/task_statuses/*").permitAll()
                         .requestMatchers("/").permitAll()
                         .requestMatchers("/welcome").permitAll()
-                        .requestMatchers("/assets/**").permitAll()
+                        .requestMatchers("/assets/*").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
