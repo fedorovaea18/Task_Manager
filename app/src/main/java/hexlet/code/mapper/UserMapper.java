@@ -32,14 +32,6 @@ public abstract class UserMapper {
         userCreateDTO.setPassword(passwordEncoder.encode(password));
     }
 
-    @BeforeMapping
-    public void encryptPasswordUpdate(UserUpdateDTO userUpdateDTO, @MappingTarget User user) {
-        var password = userUpdateDTO.getPassword();
-        if (password != null && password.isPresent()) {
-            user.setPasswordDigest(passwordEncoder.encode(password.get()));
-        }
-    }
-
     @Mapping(target = "passwordDigest", source = "password")
     public abstract User map(UserCreateDTO userCreateDTO);
 

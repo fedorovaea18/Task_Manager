@@ -59,4 +59,4 @@ public class ModelGenerator {
                 .supply(Select.field(Label::getTasks), () -> new ArrayList<Task>())
                 .toModel();
     }
-}    
+}

@@ -1,7 +1,6 @@
 package hexlet.code.dto.labels;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 

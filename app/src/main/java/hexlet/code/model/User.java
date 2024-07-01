@@ -6,17 +6,17 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.OneToMany;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import jakarta.validation.constraints.Email;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -37,35 +37,31 @@ import java.util.List;
 public class User implements UserDetails, BaseEntity {
     @Id
     @GeneratedValue(strategy = IDENTITY)
+    @ToString.Include
     @EqualsAndHashCode.Include
     private Long id;
+
+    @NotNull
+    @Column(unique = true)
+    @Email
+    private String email;
 
     private String firstName;
 
     private String lastName;
 
-    @Column(unique = true)
-    @Email
-    @NotBlank
-    private String email;
-
-    @NotBlank
+    @NotNull
     @Size(min = 3)
     private String passwordDigest;
-
-    @CreatedDate
-    private LocalDate createdAt;
 
     @LastModifiedDate
     private LocalDate updatedAt;
 
-    @OneToMany(mappedBy = "assignee", cascade = CascadeType.ALL)
-    private List<Task> tasks = new ArrayList<>();
+    @CreatedDate
+    private LocalDate createdAt;
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return new ArrayList<>();
-    }
+    @OneToMany(mappedBy = "assignee")
+    private List<Task> tasks = new ArrayList<>();
 
     @Override
     public String getPassword() {
@@ -75,6 +71,16 @@ public class User implements UserDetails, BaseEntity {
     @Override
     public String getUsername() {
         return email;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return new ArrayList<>();
     }
 
     @Override
@@ -89,11 +95,6 @@ public class User implements UserDetails, BaseEntity {
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
         return true;
     }
 }

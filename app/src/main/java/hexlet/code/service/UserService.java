@@ -6,9 +6,12 @@ import hexlet.code.dto.users.UserUpdateDTO;
 import hexlet.code.exception.ResourceNotFoundException;
 import hexlet.code.mapper.UserMapper;
 import hexlet.code.repository.UserRepository;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
@@ -21,16 +24,6 @@ public class UserService {
     @Autowired
     private UserMapper userMapper;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    public UserDTO create(UserCreateDTO userCreateDTO) {
-        var user = userMapper.map(userCreateDTO);
-        user.setPasswordDigest(passwordEncoder.encode(user.getPassword()));
-        userRepository.save(user);
-        return userMapper.map(user);
-    }
-
     public List<UserDTO> getAll() {
         var users = userRepository.findAll();
         return users.stream()
@@ -38,22 +31,31 @@ public class UserService {
                 .toList();
     }
 
-    public UserDTO findById(Long id) {
-        var user = userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("User with id: " + id + " not found"));
-        return userMapper.map(user);
-    }
-
-    public UserDTO update(UserUpdateDTO userUpdateDTO, Long id) {
-        var user = userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("User with id: " + id + " not found"));
-        userMapper.update(userUpdateDTO, user);
-
+    public UserDTO create(@Valid @RequestBody UserCreateDTO userCreateDTO) {
+        var user = userMapper.map(userCreateDTO);
         userRepository.save(user);
         return userMapper.map(user);
     }
 
-    public void delete(Long id) {
+    public UserDTO show(@PathVariable Long id) {
+        var user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User with id: " + id + " not found"));
+        return userMapper.map(user);
+    }
+
+    @PreAuthorize("@userUtils.isUser(#id)")
+    public UserDTO update(@RequestBody UserUpdateDTO userData, @PathVariable Long id) {
+        var user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User with id: " + id + " not found"));
+        userMapper.update(userData, user);
+        user = userRepository.save(user);
+        return userMapper.map(user);
+    }
+
+    @PreAuthorize("@userUtils.isUser(#id)")
+    public void delete(@PathVariable Long id) {
+        userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User with id: " + id + " not found"));
         userRepository.deleteById(id);
     }
 }
