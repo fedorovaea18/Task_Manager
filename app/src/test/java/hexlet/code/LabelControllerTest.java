@@ -3,6 +3,7 @@ package hexlet.code;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -10,8 +11,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.HashMap;
 
+import hexlet.code.dto.labels.LabelCreateDTO;
 import hexlet.code.model.Label;
+import hexlet.code.model.User;
 import hexlet.code.repository.LabelRepository;
+import hexlet.code.repository.UserRepository;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -41,6 +45,9 @@ public class LabelControllerTest {
     private LabelRepository labelRepository;
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
     private ModelGenerator modelGenerator;
 
     @Autowired
@@ -50,12 +57,18 @@ public class LabelControllerTest {
 
     private Label testLabel;
 
+    private User testUser;
+
     @BeforeEach
     public void setUp() {
-        token = jwt().jwt(builder -> builder.subject("hexlet@example.com"));
         testLabel = Instancio.of(modelGenerator.getLabelModel())
                 .create();
         labelRepository.save(testLabel);
+
+        testUser = Instancio.of(modelGenerator.getUserModel())
+                .create();
+        token = jwt().jwt(builder -> builder.subject(testUser.getEmail()));
+        userRepository.save(testUser);
     }
 
     @Test
@@ -66,14 +79,18 @@ public class LabelControllerTest {
 
     @Test
     void testCreate() throws Exception {
-
-        var data = Instancio.of(modelGenerator.getLabelModel())
+        var newLabel = Instancio.of(modelGenerator.getTaskStatusModel())
                 .create();
+
+        var data = new LabelCreateDTO();
+
+        data.setName(newLabel.getName());
 
         var request = post("/api/labels")
                 .with(token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(om.writeValueAsString(data));
+
         mockMvc.perform(request)
                 .andExpect(status().isCreated());
 
@@ -101,5 +118,15 @@ public class LabelControllerTest {
         var label = labelRepository.findById(testLabel.getId()).get();
 
         assertThat(label.getName()).isEqualTo("NewName");
+    }
+
+    @Test
+    public void testDelete() throws Exception {
+        var request = delete("/api/labels/{id}", testLabel.getId()).with(token);
+
+        mockMvc.perform(request)
+                .andExpect(status().isNoContent());
+
+        assertThat(labelRepository.existsById(testLabel.getId())).isEqualTo(false);
     }
 }

@@ -33,7 +33,7 @@ public class TaskStatusService {
                 .toList();
     }
 
-    public TaskStatusDTO findById(Long id) {
+    public TaskStatusDTO show(Long id) {
         var taskStatus = taskStatusRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("TaskStatus with id: " + id + " not found"));
         return taskStatusMapper.map(taskStatus);

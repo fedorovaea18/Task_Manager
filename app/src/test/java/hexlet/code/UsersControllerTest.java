@@ -84,6 +84,7 @@ public class UsersControllerTest {
                 .with(token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(om.writeValueAsString(data));
+
         mockMvc.perform(request)
                 .andExpect(status().isCreated());
 
@@ -96,7 +97,6 @@ public class UsersControllerTest {
 
     @Test
     public void testShow() throws Exception {
-
         var request = get("/api/users/" + testUser.getId())
                 .with(token);
 
@@ -118,7 +118,6 @@ public class UsersControllerTest {
 
     @Test
     public void testUpdate() throws Exception {
-
         var data = new HashMap<>();
         data.put("firstName", "Mike");
         data.put("email", "mike@yandex.ru");
@@ -140,10 +139,6 @@ public class UsersControllerTest {
 
     @Test
     public void testDelete() throws Exception {
-
-        userRepository.save(testUser);
-
-        var token = jwt().jwt(builder -> builder.subject(testUser.getEmail()));
 
         var request = delete("/api/users/{id}", testUser.getId()).with(token);
 

@@ -64,15 +64,15 @@ tasks.jacocoTestReport {
     reports {
         xml.required = true
     }
+}
 
-//sentry {
-//        includeSourceContext = true
-//       org = "hexlet-lw"
-//       projectName = "java-project99"
-//       authToken = System.getenv("SENTRY_AUTH_TOKEN")
-//}
-//
-//    tasks.sentryBundleSourcesJava {
-//        enabled = System.getenv("SENTRY_AUTH_TOKEN") != null
-//    }
+sentry {
+    includeSourceContext = true
+    org = "hexlet-lw"
+    projectName = "java-project99"
+    authToken = System.getenv("SENTRY_AUTH_TOKEN")
+}
+
+tasks.sentryBundleSourcesJava {
+    enabled = System.getenv("SENTRY_AUTH_TOKEN") != null
 }

@@ -33,7 +33,7 @@ public class LabelService {
                 .toList();
     }
 
-    public LabelDTO findById(Long id) {
+    public LabelDTO show(Long id) {
         var label = labelRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Label with id: " + id + " not found"));
         return labelMapper.map(label);

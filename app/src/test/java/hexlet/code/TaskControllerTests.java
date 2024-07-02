@@ -1,5 +1,6 @@
 package hexlet.code;
 
+import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -7,10 +8,16 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.Set;
 
+import hexlet.code.model.Label;
 import hexlet.code.model.Task;
+import hexlet.code.model.TaskStatus;
+import hexlet.code.model.User;
 import hexlet.code.repository.TaskRepository;
+import hexlet.code.repository.UserRepository;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -40,6 +47,9 @@ public class TaskControllerTests {
     private TaskRepository taskRepository;
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
     private ModelGenerator modelGenerator;
 
     @Autowired
@@ -49,12 +59,22 @@ public class TaskControllerTests {
 
     private Task testTask;
 
+    private User testUser;
+
+    private Label testLabel;
+
+    private TaskStatus testTaskStatus;
+
     @BeforeEach
     public void setUp() {
-        token = jwt().jwt(builder -> builder.subject("hexlet@example.com"));
         testTask = Instancio.of(modelGenerator.getTaskModel())
                 .create();
         taskRepository.save(testTask);
+
+        testUser = Instancio.of(modelGenerator.getUserModel())
+                .create();
+        token = jwt().jwt(builder -> builder.subject(testUser.getEmail()));
+        userRepository.save(testUser);
     }
 
     @Test
@@ -64,7 +84,7 @@ public class TaskControllerTests {
     }
 
     @Test
-    void testCreate() throws Exception {
+    public void testCreate() throws Exception {
 
         var data = new HashMap<>();
         data.put("title", testTask.getName());
@@ -86,6 +106,30 @@ public class TaskControllerTests {
         assertThat(task.getDescription()).isEqualTo(testTask.getDescription());
         assertThat(task.getTaskStatus()).isEqualTo(testTask.getTaskStatus());
         assertThat(task.getAssignee()).isEqualTo(testTask.getAssignee());
+    }
+
+    @Test
+    public void testShow() throws Exception {
+        var request = get("/api/tasks/" + testTask.getId())
+                .with(token);
+
+        var result = mockMvc.perform(request)
+                .andExpect(status().isOk())
+                .andReturn();
+
+        var body = result.getResponse().getContentAsString();
+
+        assertThatJson(body).and(
+                a -> a.node("id").isEqualTo(testTask.getId()),
+                a -> a.node("title").isEqualTo(testTask.getName()),
+                a -> a.node("index").isEqualTo(testTask.getIndex()),
+                a -> a.node("content").isEqualTo(testTask.getDescription()),
+                a -> a.node("status").isEqualTo(testTaskStatus.getSlug()),
+                a -> a.node("assignee_id").isEqualTo(testUser.getId()),
+                a -> a.node("createdAt").isEqualTo(testTask.getCreatedAt()
+                        .format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))),
+                a -> a.node("taskLabelId").isEqualTo(Set.of(testLabel.getId()))
+        );
     }
 
     @Test

@@ -46,7 +46,7 @@ public class LabelController {
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public LabelDTO show(@PathVariable Long id) {
-        return labelService.findById(id);
+        return labelService.show(id);
     }
 
     @PutMapping("/{id}")

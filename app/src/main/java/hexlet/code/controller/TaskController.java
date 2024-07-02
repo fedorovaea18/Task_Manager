@@ -48,7 +48,7 @@ public class TaskController {
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public TaskDTO show(@PathVariable Long id) {
-        return taskService.findById(id);
+        return taskService.show(id);
     }
 
     @PutMapping("/{id}")
