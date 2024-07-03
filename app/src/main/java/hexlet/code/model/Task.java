@@ -1,6 +1,5 @@
 package hexlet.code.model;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
@@ -8,7 +7,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -33,8 +31,8 @@ public class Task implements BaseEntity {
     @EqualsAndHashCode.Include
     private Long id;
 
-    @NotBlank
-    @Column(unique = true)
+    //@NotBlank
+    //@Column(unique = true)
     private String name;
 
     private Long index;

@@ -31,12 +31,14 @@ public class TaskStatus implements BaseEntity {
     @EqualsAndHashCode.Include
     private Long id;
 
+    //@Size(min = 1)
     @Column(unique = true)
     @NotBlank
     private String name;
 
     @Column(unique = true)
     @NotBlank
+    //@Size(min = 1)
     private String slug;
 
     @CreatedDate

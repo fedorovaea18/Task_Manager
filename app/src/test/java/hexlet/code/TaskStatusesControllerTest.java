@@ -162,7 +162,6 @@ public class TaskStatusesControllerTest {
 
     @Test
     public void testDelete() throws Exception {
-
         var request = delete("/api/task_statuses/{id}", testTaskStatus.getId()).with(token);
 
         mockMvc.perform(request)
