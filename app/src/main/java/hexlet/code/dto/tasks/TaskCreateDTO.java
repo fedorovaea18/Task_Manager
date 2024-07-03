@@ -17,7 +17,7 @@ public class TaskCreateDTO {
     private String title;
 
     @Column(unique = true)
-    private Integer index;
+    private Long index;
 
     private String content;
 
@@ -27,5 +27,5 @@ public class TaskCreateDTO {
     @JsonProperty("assignee_id")
     private Long assigneeId;
 
-    private List<Long> taskLabelId;
+    private List<Long> taskLabelIds;
 }
