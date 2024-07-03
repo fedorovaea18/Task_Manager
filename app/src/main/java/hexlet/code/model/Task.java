@@ -7,6 +7,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -31,7 +33,8 @@ public class Task implements BaseEntity {
     @EqualsAndHashCode.Include
     private Long id;
 
-    //@NotBlank
+    @NotBlank
+    @Size(min = 1)
     //@Column(unique = true)
     private String name;
 

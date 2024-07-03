@@ -1,5 +1,6 @@
 package hexlet.code.dto.taskstatuses;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,12 +9,12 @@ import lombok.Setter;
 @Setter
 public class TaskStatusCreateDTO {
 
-    //@NotBlank
+    @NotBlank
     //@Column(unique = true)
     @Size(min = 1)
     private String name;
 
-    //@NotBlank
+    @NotBlank
     //@Column(unique = true)
     @Size(min = 1)
     private String slug;

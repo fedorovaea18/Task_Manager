@@ -19,6 +19,7 @@ import hexlet.code.model.User;
 import hexlet.code.repository.TaskStatusRepository;
 import hexlet.code.repository.UserRepository;
 import org.instancio.Instancio;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,6 +73,12 @@ public class TaskStatusesControllerTest {
                 .create();
         token = jwt().jwt(builder -> builder.subject(testUser.getEmail()));
         userRepository.save(testUser);
+    }
+
+    @AfterEach
+    public void clean() {
+        taskStatusRepository.deleteAll();
+        userRepository.deleteAll();
     }
 
     @Test

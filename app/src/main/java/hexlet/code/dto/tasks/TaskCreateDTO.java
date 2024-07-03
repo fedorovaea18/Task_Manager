@@ -1,7 +1,6 @@
 package hexlet.code.dto.tasks;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -16,7 +15,7 @@ public class TaskCreateDTO {
     @NotBlank
     private String title;
 
-    @Column(unique = true)
+    //@Column(unique = true)
     private Long index;
 
     private String content;

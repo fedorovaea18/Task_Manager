@@ -3,6 +3,7 @@ package hexlet.code;
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -10,15 +11,20 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 
+import hexlet.code.dto.tasks.TaskCreateDTO;
 import hexlet.code.model.Label;
 import hexlet.code.model.Task;
 import hexlet.code.model.TaskStatus;
 import hexlet.code.model.User;
+import hexlet.code.repository.LabelRepository;
 import hexlet.code.repository.TaskRepository;
+import hexlet.code.repository.TaskStatusRepository;
 import hexlet.code.repository.UserRepository;
 import org.instancio.Instancio;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +56,12 @@ public class TaskControllerTests {
     private UserRepository userRepository;
 
     @Autowired
+    private TaskStatusRepository taskStatusRepository;
+
+    @Autowired
+    private LabelRepository labelRepository;
+
+    @Autowired
     private ModelGenerator modelGenerator;
 
     @Autowired
@@ -77,6 +89,14 @@ public class TaskControllerTests {
         userRepository.save(testUser);
     }
 
+    @AfterEach
+    public void clean() {
+        taskRepository.deleteAll();
+        taskStatusRepository.deleteAll();
+        labelRepository.deleteAll();
+        userRepository.deleteAll();
+    }
+
     @Test
     public void testIndex() throws Exception {
         mockMvc.perform(get("/api/tasks").with(jwt()))
@@ -86,40 +106,56 @@ public class TaskControllerTests {
 
     @Test
     public void testCreate() throws Exception {
+        var newUser = Instancio.of(modelGenerator.getUserModel())
+                .create();
+        userRepository.save(newUser);
 
-        var data = new HashMap<>();
-        data.put("title", testTask.getName());
-        data.put("index", testTask.getIndex());
-        data.put("content", testTask.getDescription());
-        data.put("status", testTask.getTaskStatus().getSlug());
-        data.put("assignee_id", testTask.getAssignee().getId());
+        var newTaskStatus = Instancio.of(modelGenerator.getTaskStatusModel())
+                .create();
+        taskStatusRepository.save(newTaskStatus);
+
+        var newLabel = Instancio.of(modelGenerator.getLabelModel())
+                .create();
+        labelRepository.save(newLabel);
+
+        var newTask = Instancio.of(modelGenerator.getTaskModel())
+                .create();
+
+        var data = new TaskCreateDTO();
+        data.setTitle(newTask.getName());
+        data.setIndex(newTask.getIndex());
+        data.setContent(newTask.getDescription());
+        data.setStatus(newTaskStatus.getSlug());
+        data.setAssigneeId(newUser.getId());
+        data.setTaskLabelIds(List.of(newLabel.getId()));
 
         var request = post("/api/tasks")
                 .with(token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(om.writeValueAsString(data));
+
         mockMvc.perform(request)
                 .andExpect(status().isCreated());
 
-        var task = taskRepository.findByName(testTask.getName()).get();
+        var task = taskRepository.findByName(newTask.getName()).get();
 
-        assertThat(task.getIndex()).isEqualTo(testTask.getIndex());
-        assertThat(task.getDescription()).isEqualTo(testTask.getDescription());
-        assertThat(task.getTaskStatus()).isEqualTo(testTask.getTaskStatus());
-        assertThat(task.getAssignee()).isEqualTo(testTask.getAssignee());
+        //assertNotNull(task);
+        assertThat(task.getIndex()).isEqualTo(newTask.getIndex());
+        assertThat(task.getDescription()).isEqualTo(newTask.getDescription());
+        assertThat(task.getTaskStatus()).isEqualTo(newTaskStatus);
+        assertThat(task.getAssignee()).isEqualTo(newUser);
+        assertThat(task.getLabels()).isEqualTo(Set.of(newLabel));
     }
+
 
     @Test
     public void testShow() throws Exception {
         var request = get("/api/tasks/" + testTask.getId())
                 .with(token);
-
         var result = mockMvc.perform(request)
                 .andExpect(status().isOk())
                 .andReturn();
-
         var body = result.getResponse().getContentAsString();
-
         assertThatJson(body).and(
                 a -> a.node("id").isEqualTo(testTask.getId()),
                 a -> a.node("title").isEqualTo(testTask.getName()),
@@ -129,7 +165,7 @@ public class TaskControllerTests {
                 a -> a.node("assignee_id").isEqualTo(testUser.getId()),
                 a -> a.node("createdAt").isEqualTo(testTask.getCreatedAt()
                         .format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))),
-                a -> a.node("taskLabelId").isEqualTo(Set.of(testLabel.getId()))
+                a -> a.node("taskLabelIds").isEqualTo(Set.of(testLabel.getId()))
         );
     }
 
@@ -154,5 +190,15 @@ public class TaskControllerTests {
         assertThat(task.getName()).isEqualTo("NewTitle");
         assertThat(task.getIndex()).isEqualTo(1);
         assertThat(task.getDescription()).isEqualTo("NewContent");
+    }
+
+    @Test
+    public void testDelete() throws Exception {
+        var request = delete("/api/tasks/{id}", testTask.getId()).with(token);
+
+        mockMvc.perform(request)
+                .andExpect(status().isNoContent());
+
+        assertThat(taskRepository.existsById(testTask.getId())).isEqualTo(false);
     }
 }

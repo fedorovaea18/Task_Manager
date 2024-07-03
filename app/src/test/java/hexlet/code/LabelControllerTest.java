@@ -17,6 +17,7 @@ import hexlet.code.model.User;
 import hexlet.code.repository.LabelRepository;
 import hexlet.code.repository.UserRepository;
 import org.instancio.Instancio;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,6 +72,12 @@ public class LabelControllerTest {
         userRepository.save(testUser);
     }
 
+    @AfterEach
+    public void clean() {
+        labelRepository.deleteAll();
+        userRepository.deleteAll();
+    }
+
     @Test
     public void testIndex() throws Exception {
         mockMvc.perform(get("/api/labels").with(jwt()))
@@ -79,7 +86,7 @@ public class LabelControllerTest {
 
     @Test
     void testCreate() throws Exception {
-        var newLabel = Instancio.of(modelGenerator.getTaskStatusModel())
+        var newLabel = Instancio.of(modelGenerator.getLabelModel())
                 .create();
 
         var data = new LabelCreateDTO();
