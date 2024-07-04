@@ -75,7 +75,7 @@ public class UsersControllerTest {
     }
 
     @Test
-    void testCreate() throws Exception {
+    public void testCreate() throws Exception {
         var newUser = Instancio.of(modelGenerator.getUserModel())
                 .create();
 

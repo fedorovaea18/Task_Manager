@@ -85,7 +85,7 @@ public class LabelControllerTest {
     }
 
     @Test
-    void testCreate() throws Exception {
+    public void testCreate() throws Exception {
         var newLabel = Instancio.of(modelGenerator.getLabelModel())
                 .create();
 
@@ -107,6 +107,22 @@ public class LabelControllerTest {
         assertThat(labelRepository.findByName(testLabel.getName())).isPresent();
         assertThat(label.getName()).isEqualTo(data.getName());
     }
+
+    @Test
+    public void testCreateLabelWithInvalidNameSize() throws Exception {
+        LabelCreateDTO data = new LabelCreateDTO();
+
+        data.setName("ab");
+
+        var request = post("/api/labels")
+                .with(token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(om.writeValueAsString(data));
+
+        mockMvc.perform(request)
+                .andExpect(status().isBadRequest());
+    }
+
 
     @Test
     public void testUpdate() throws Exception {

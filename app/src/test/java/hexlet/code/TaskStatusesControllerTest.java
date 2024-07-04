@@ -88,7 +88,7 @@ public class TaskStatusesControllerTest {
     }
 
     @Test
-    void testCreate() throws Exception {
+    public void testCreate() throws Exception {
         var newTaskStatus = Instancio.of(modelGenerator.getTaskStatusModel())
                 .create();
 
