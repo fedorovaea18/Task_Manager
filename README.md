@@ -14,7 +14,7 @@ If you want to start this project locally, enter this command in terminal:
 ```
 git clone git@github.com:fedorovaea18/java-project-99.git
 cd java-project-99
-make 
+make run-dev
 ```
 Then open http://localhost:8080 on your browser and enter admin details:
 
