@@ -65,14 +65,14 @@ public class TaskStatusesControllerTest {
 
     @BeforeEach
     public void setUp() {
-        testTaskStatus = Instancio.of(modelGenerator.getTaskStatusModel())
-                .create();
-        taskStatusRepository.save(testTaskStatus);
-
         testUser = Instancio.of(modelGenerator.getUserModel())
                 .create();
         token = jwt().jwt(builder -> builder.subject(testUser.getEmail()));
         userRepository.save(testUser);
+
+        testTaskStatus = Instancio.of(modelGenerator.getTaskStatusModel())
+                .create();
+        taskStatusRepository.save(testTaskStatus);
     }
 
     @AfterEach

@@ -1,13 +1,14 @@
 package hexlet.code.model;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -37,13 +38,13 @@ public class Label implements BaseEntity {
     private Long id;
 
     @Column(unique = true)
-    @NotBlank
+    //@NotBlank
     @Size(min = 3, max = 1000)
     private String name;
 
     @CreatedDate
     private LocalDateTime createdAt;
 
-    @ManyToMany(mappedBy = "labels")
+    @ManyToMany(mappedBy = "labels", fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     private List<Task> tasks;
 }

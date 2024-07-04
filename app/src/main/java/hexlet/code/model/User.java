@@ -1,7 +1,9 @@
 package hexlet.code.model;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Column;
 import jakarta.persistence.Id;
@@ -59,7 +61,7 @@ public class User implements UserDetails, BaseEntity {
     @CreatedDate
     private LocalDate createdAt;
 
-    @OneToMany(mappedBy = "assignee")
+    @OneToMany(mappedBy = "assignee", fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     private List<Task> tasks = new ArrayList<>();
 
     @Override

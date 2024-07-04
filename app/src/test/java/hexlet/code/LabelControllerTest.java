@@ -62,14 +62,14 @@ public class LabelControllerTest {
 
     @BeforeEach
     public void setUp() {
-        testLabel = Instancio.of(modelGenerator.getLabelModel())
-                .create();
-        labelRepository.save(testLabel);
-
         testUser = Instancio.of(modelGenerator.getUserModel())
                 .create();
         token = jwt().jwt(builder -> builder.subject(testUser.getEmail()));
         userRepository.save(testUser);
+
+        testLabel = Instancio.of(modelGenerator.getLabelModel())
+                .create();
+        labelRepository.save(testLabel);
     }
 
     @AfterEach
