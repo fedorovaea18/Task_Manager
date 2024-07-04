@@ -116,6 +116,38 @@ public class TaskControllerTests {
     }
 
     @Test
+    public void testGetList() throws Exception {
+        var request = get("/api/tasks")
+                .with(token);
+
+        var result = mockMvc.perform(request)
+                .andExpect(status().isOk())
+                .andReturn();
+
+        var body = result.getResponse().getContentAsString();
+
+        assertThatJson(body).isArray().hasSize(1);
+    }
+
+    @Test
+    public void testGetListWithParams() throws Exception {
+        var request = get("/api/tasks?"
+                + "titleCont=" + "Name"
+                + "&assigneeId=" + 2024
+                + "&status=" + "Slug"
+                + "&labelId=" + 2024)
+                .with(token);
+
+        var result = mockMvc.perform(request)
+                .andExpect(status().isOk())
+                .andReturn();
+
+        var body = result.getResponse().getContentAsString();
+
+        assertThatJson(body).isArray().hasSize(0);
+    }
+
+    @Test
     public void testCreate() throws Exception {
         var newUser = Instancio.of(modelGenerator.getUserModel())
                 .create();
