@@ -12,8 +12,11 @@ install:
 run-dist:
 	./build/install/java-package/bin/java-package
 
-run:
-	./gradlew run
+run-dev:
+	./gradlew run --args='--spring.profiles.active=development'
+
+run-prod:
+	./gradlew run --args='--spring.profiles.active=production'
 
 test:
 	./gradlew test

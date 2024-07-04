@@ -30,6 +30,9 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
 
+    implementation("org.springframework.boot:spring-boot-gradle-plugin:3.2.2")
+    //implementation("org.gradle.api.plugins")
+
     runtimeOnly("com.h2database:h2")
     implementation("org.postgresql:postgresql:42.7.2")
 
