@@ -4,7 +4,7 @@ import hexlet.code.dto.labels.LabelCreateDTO;
 import hexlet.code.dto.labels.LabelDTO;
 import hexlet.code.dto.labels.LabelUpdateDTO;
 import hexlet.code.service.LabelService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -23,9 +23,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/labels")
+@AllArgsConstructor
 public class LabelController {
-    @Autowired
-    private LabelService labelService;
+
+    private final LabelService labelService;
 
     @GetMapping("")
     @ResponseStatus(HttpStatus.OK)

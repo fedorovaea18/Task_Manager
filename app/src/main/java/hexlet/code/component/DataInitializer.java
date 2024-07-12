@@ -7,30 +7,23 @@ import hexlet.code.service.CustomUserDetailsService;
 import hexlet.code.util.LabelUtils;
 import hexlet.code.util.TaskStatusUtils;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
-
 
 @Component
 @AllArgsConstructor
 public class DataInitializer implements ApplicationRunner {
 
-    @Autowired
     private final CustomUserDetailsService userService;
 
-    @Autowired
-    private TaskStatusUtils taskStatusUtils;
+    private final TaskStatusUtils taskStatusUtils;
 
-    @Autowired
-    private LabelUtils labelUtils;
+    private final LabelUtils labelUtils;
 
-    @Autowired
-    private TaskStatusRepository taskStatusRepository;
+    private final TaskStatusRepository taskStatusRepository;
 
-    @Autowired
-    private LabelRepository labelRepository;
+    private final LabelRepository labelRepository;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {

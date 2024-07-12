@@ -47,8 +47,10 @@ public class User implements UserDetails, BaseEntity {
     @Email
     private String email;
 
+    @Column(name = "first_name")
     private String firstName;
 
+    @Column(name = "last_name")
     private String lastName;
 
     @NotNull
@@ -56,9 +58,11 @@ public class User implements UserDetails, BaseEntity {
     private String passwordDigest;
 
     @LastModifiedDate
+    @Column(name = "updated_at")
     private LocalDate updatedAt;
 
     @CreatedDate
+    @Column(name = "created_at")
     private LocalDate createdAt;
 
     @OneToMany(mappedBy = "assignee", fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
