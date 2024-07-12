@@ -6,7 +6,7 @@
 
 This project is a system for task managing like [Redmine](http://www.redmine.org). You can set tasks, assign performers and change their statuses. Registration and authentication are required. The application can be used both locally and in a production environment.
 
-## Installing
+## Local start
 
 If you want to start this project locally, enter this command in terminal:
 
