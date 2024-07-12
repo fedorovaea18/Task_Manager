@@ -1,4 +1,4 @@
-name: Github Actions
+name: Java CI
 
 on:
   push:
