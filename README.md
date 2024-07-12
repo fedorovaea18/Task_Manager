@@ -6,13 +6,13 @@
 
 This project is a system for task managing like [Redmine](http://www.redmine.org). You can set tasks, assign performers and change their statuses. Registration and authentication are required. The application can be used both locally and in a production environment.
 
-## Local start
+## Installing
 
 If you want to start this project locally, enter this command in terminal:
 
 ```
-git clone git@github.com:fedorovaea18/java-project-99.git
-cd java-project-99
+git clone git@github.com:fedorovaea18/Task_Manager.git
+cd Task_Manager/app
 make run-dev
 ```
 Then open http://localhost:8080 on your browser and enter admin details:
@@ -21,6 +21,13 @@ Then open http://localhost:8080 on your browser and enter admin details:
 Username: hexlet@example.com
 Password: qwerty
 ```
+
+## **Run checkstyle and tests**
+```
+make lint
+make test
+```
+
 ### **Technology stack:**
 - _Framework: Spring Boot_;
 - _Authentication: Spring Security_;
